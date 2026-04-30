@@ -1,0 +1,37 @@
+<div class="booking-steps">
+  <div class="container-booking">
+    <div class="booking-steps-inner">
+      <div class="step-item <%= currentStep > 1 ? 'done' : (currentStep === 1 ? 'active' : '') %>">
+        <div class="step-circle">
+          <% if (currentStep > 1) { %>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+          <% } else { %>1<% } %>
+        </div>
+        <div class="step-label">Tjeneste</div>
+      </div>
+      <div class="step-line <%= currentStep > 1 ? 'done' : '' %>"></div>
+      <div class="step-item <%= currentStep > 2 ? 'done' : (currentStep === 2 ? 'active' : '') %>">
+        <div class="step-circle">
+          <% if (currentStep > 2) { %>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+          <% } else { %>2<% } %>
+        </div>
+        <div class="step-label">Frisør</div>
+      </div>
+      <div class="step-line <%= currentStep > 2 ? 'done' : '' %>"></div>
+      <div class="step-item <%= currentStep > 3 ? 'done' : (currentStep === 3 ? 'active' : '') %>">
+        <div class="step-circle">
+          <% if (currentStep > 3) { %>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+          <% } else { %>3<% } %>
+        </div>
+        <div class="step-label">Tid</div>
+      </div>
+      <div class="step-line <%= currentStep > 3 ? 'done' : '' %>"></div>
+      <div class="step-item <%= currentStep === 4 ? 'active' : '' %>">
+        <div class="step-circle">4</div>
+        <div class="step-label">Kontakt</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<%- include('../includes/_head') %>
+<%- include('../includes/_header') %>
+<%- include('../includes/_booking-steps') %>
+
+<div class="booking-page">
+  <div class="container-booking">
+    <div class="page-bar" style="background:transparent;border:none;padding:0 0 1.25rem;">
+      <div class="page-bar-inner">
+        <a href="/booking/step3" class="nav-back">← Tilbake</a>
+        <span class="page-bar-title">Kontaktinfo</span>
+      </div>
+    </div>
+
+    <div class="summary-chip">
+      <span class="chip"><%= booking.serviceName %></span>
+      <span class="chip"><%= booking.workerName.split(' ')[0] %></span>
+      <span class="chip"><%= booking.dateDisplay %> · <%= booking.time %></span>
+    </div>
+
+    <% if (error) { %>
+    <div class="form-error" style="margin-top:1rem;"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/booking/step4">
+      <div class="booking-card">
+        <div class="form-group">
+          <label for="customerName">Navn *</label>
+          <input type="text" id="customerName" name="customerName" class="form-input"
+            placeholder="Ola Nordmann" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="customerPhone">Telefon *</label>
+          <input type="tel" id="customerPhone" name="customerPhone" class="form-input"
+            placeholder="12345678" required autocomplete="tel" maxlength="8" inputmode="numeric">
+          <div class="form-hint">8 siffer, uten landskode</div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0">
+          <label for="customerEmail">
+            E-post <span style="color:var(--gray-400);font-weight:400">(valgfritt)</span>
+          </label>
+          <input type="email" id="customerEmail" name="customerEmail" class="form-input"
+            placeholder="ola@eksempel.no" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="booking-card">
+        <div class="confirm-header">Sammendrag</div>
+        <div class="confirm-row">
+          <span class="label">Tjeneste</span>
+          <span class="value"><%= booking.serviceName %></span>
+        </div>
+        <div class="confirm-row">
+          <span class="label">Frisør</span>
+          <span class="value"><%= booking.workerName %></span>
+        </div>
+        <div class="confirm-row">
+          <span class="label">Dato</span>
+          <span class="value"><%= booking.dateDisplay %></span>
+        </div>
+        <div class="confirm-row">
+          <span class="label">Tid</span>
+          <span class="value"><%= booking.time %></span>
+        </div>
+        <div class="total-row">
+          <span>Estimert pris</span>
+          <span class="total-price"><%= booking.servicePrice %> kr</span>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button type="submit" class="btn btn-primary btn-full">Bekreft bestilling →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../includes/_foot') %>

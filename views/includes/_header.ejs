@@ -1,0 +1,29 @@
+<header class="site-header">
+  <div class="container">
+    <div class="site-header-inner">
+      <a href="/" class="logo-wrap">
+        <span class="logo-text">Solskinn</span>
+        <span class="logo-sub">Frisør</span>
+      </a>
+      <nav class="site-nav">
+        <a href="/" class="<%= activeNav === 'hjem' ? 'active' : '' %>">Hjem</a>
+        <a href="/#tjenester">Tjenester</a>
+        <a href="/#aapningstider">Åpningstider</a>
+        <a href="/booking" class="btn btn-primary site-nav-cta <%= activeNav === 'book' ? '' : '' %>">Book time</a>
+      </nav>
+      <button class="nav-hamburger" aria-label="Meny" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6"  x2="19" y2="6"/>
+          <line x1="3" y1="11" x2="19" y2="11"/>
+          <line x1="3" y1="16" x2="19" y2="16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/">Hjem</a>
+    <a href="/#tjenester">Tjenester</a>
+    <a href="/#aapningstider">Åpningstider</a>
+    <a href="/booking">Book time</a>
+  </div>
+</header>

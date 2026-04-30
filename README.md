@@ -1,2 +1,2 @@
-# Solskinn-Fris-r
-Solskinn Frisør er din loklae Frisør her i trøndelag
+# Solskinn-Frisoer
+Solskinn Frisør er din lokale Frisør her i Trøndelag

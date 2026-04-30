@@ -1,0 +1,63 @@
+<%- include('../includes/_head') %>
+<%- include('../includes/_header') %>
+
+<div class="confirmation-page">
+  <div class="container-booking">
+    <div class="success-wrap">
+      <div class="success-icon">
+        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="5,15 12,22 25,8"/>
+        </svg>
+      </div>
+      <span class="success-badge">Bestilling bekreftet</span>
+      <div class="success-title">Vi gleder oss til å se deg!</div>
+      <div class="success-subtitle">Du mottar SMS-påminnelse 24 timer før timen.</div>
+    </div>
+
+    <div class="confirm-card">
+      <div class="confirm-header">Bestillingsdetaljer</div>
+      <div class="confirm-row">
+        <span class="label">Tjeneste</span>
+        <span class="value"><%= bk.service_name %></span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Frisør</span>
+        <span class="value"><%= bk.worker_name %></span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Dato</span>
+        <span class="value"><%= dateDisplay %></span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Tid</span>
+        <span class="value"><%= bk.start_time.slice(0, 5) %></span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">Varighet</span>
+        <span class="value"><%= bk.duration_minutes %> min</span>
+      </div>
+      <div class="total-row">
+        <div>
+          <div style="font-size:.8125rem;color:var(--gray-500);">Estimert pris</div>
+          <div class="total-price"><%= bk.price %> kr</div>
+        </div>
+        <div style="text-align:right">
+          <div class="booking-code">Booking-kode</div>
+          <div style="font-size:1.1rem;font-weight:800;color:var(--amber-800);letter-spacing:.1em;"><%= bk.booking_code %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-bottom:1.5rem;">
+      <strong>Avbestilling</strong> — Kanseller senest 24 timer før timen for å unngå gebyr.
+      Ring oss på <strong>37 02 11 xx</strong>.
+    </div>
+
+    <div class="action-row">
+      <a href="/" class="btn btn-ghost">← Tilbake til forsiden</a>
+      <a href="/booking" class="btn btn-primary">Book ny time</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../includes/_foot') %>

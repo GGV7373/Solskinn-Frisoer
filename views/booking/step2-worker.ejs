@@ -1,0 +1,55 @@
+<%- include('../includes/_head') %>
+<%- include('../includes/_header') %>
+<%- include('../includes/_booking-steps') %>
+
+<div class="booking-page">
+  <div class="container-booking">
+    <div class="page-bar" style="background:transparent;border:none;padding:0 0 1.25rem;">
+      <div class="page-bar-inner">
+        <a href="/booking/step1" class="nav-back">← Tilbake</a>
+        <span class="page-bar-title">Velg frisør</span>
+      </div>
+    </div>
+
+    <% if (booking) { %>
+    <div class="summary-chip">
+      <span class="chip"><%= booking.serviceName %> · <%= booking.serviceDuration %> min</span>
+    </div>
+    <% } %>
+
+    <form method="POST" action="/booking/step2" id="step2-form">
+      <div class="booking-card">
+        <div class="emp-grid">
+          <% workers.forEach(w => { %>
+          <label class="emp-card <%= booking && booking.workerId == w.id ? 'selected' : '' %>">
+            <input type="radio" name="workerId" value="<%= w.id %>" style="display:none" <%= booking && booking.workerId == w.id ? 'checked' : '' %>>
+            <div class="emp-avatar <%= w.avatar_color %>"><%= w.initials %></div>
+            <div class="emp-name"><%= w.name %></div>
+            <div class="emp-role"><%= w.role %></div>
+            <div class="emp-days"><%= w.daysLabel %></div>
+          </label>
+          <% }) %>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button type="submit" class="btn btn-primary btn-full" id="submit-btn" <%= !(booking && booking.workerId) ? 'disabled' : '' %>>
+          Velg dato og tid →
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.emp-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.emp-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    card.querySelector('input').checked = true;
+    document.getElementById('submit-btn').disabled = false;
+  });
+});
+</script>
+
+<%- include('../includes/_foot') %>

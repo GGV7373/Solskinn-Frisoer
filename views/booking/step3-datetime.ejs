@@ -1,0 +1,120 @@
+<%- include('../includes/_head') %>
+<%- include('../includes/_header') %>
+<%- include('../includes/_booking-steps') %>
+
+<div class="booking-page">
+  <div class="container-booking">
+    <div class="page-bar" style="background:transparent;border:none;padding:0 0 1.25rem;">
+      <div class="page-bar-inner">
+        <a href="/booking/step2" class="nav-back">← Tilbake</a>
+        <span class="page-bar-title">Velg dato og tid</span>
+      </div>
+    </div>
+
+    <div class="summary-chip">
+      <span class="chip"><%= booking.serviceName %></span>
+      <span class="chip"><%= booking.workerName %></span>
+    </div>
+
+    <form method="POST" action="/booking/step3" id="step3-form">
+      <input type="hidden" name="date" id="selected-date" value="<%= initialDate || '' %>">
+      <input type="hidden" name="time" id="selected-time" value="">
+
+      <div class="booking-card">
+        <div class="step3-section">
+          <div class="section-title">Velg dato</div>
+          <div class="date-strip" id="date-strip">
+            <% if (dates.length === 0) { %>
+              <p style="font-size:.875rem;color:var(--gray-400);">Ingen tilgjengelige datoer de neste 21 dagene.</p>
+            <% } %>
+            <% dates.forEach((d, i) => { %>
+            <button type="button" class="date-btn <%= i === 0 ? 'selected' : '' %>" data-date="<%= d.iso %>">
+              <span><%= d.dayShort %></span>
+              <span class="day-num"><%= d.dayNum %></span>
+            </button>
+            <% }) %>
+          </div>
+        </div>
+
+        <div class="step3-section">
+          <div class="section-title">Ledige tider</div>
+          <div class="time-grid" id="time-grid">
+            <% if (initialSlots.length === 0) { %>
+              <div class="no-slots">Ingen ledige tider denne dagen</div>
+            <% } else { %>
+              <% initialSlots.forEach(slot => { %>
+              <button type="button"
+                class="time-slot <%= slot.available ? '' : 'taken' %>"
+                data-time="<%= slot.time %>"
+                <%= slot.available ? '' : 'disabled' %>>
+                <%= slot.time %>
+              </button>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button type="submit" class="btn btn-primary btn-full" id="submit-btn" disabled>
+          Fyll inn kontaktinfo →
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const workerId  = '<%= booking.workerId %>';
+const serviceId = '<%= booking.serviceId %>';
+const dateInput = document.getElementById('selected-date');
+const timeInput = document.getElementById('selected-time');
+const submitBtn = document.getElementById('submit-btn');
+const timeGrid  = document.getElementById('time-grid');
+
+function attachTimeListeners() {
+  timeGrid.querySelectorAll('.time-slot:not(.taken)').forEach(btn => {
+    btn.addEventListener('click', function () {
+      timeGrid.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      timeInput.value = this.dataset.time;
+      submitBtn.disabled = false;
+    });
+  });
+}
+
+function renderSlots(slots) {
+  timeInput.value = '';
+  submitBtn.disabled = true;
+  if (!slots || slots.length === 0) {
+    timeGrid.innerHTML = '<div class="no-slots">Ingen ledige tider denne dagen</div>';
+    return;
+  }
+  timeGrid.innerHTML = slots.map(s =>
+    `<button type="button" class="time-slot ${s.available ? '' : 'taken'}" data-time="${s.time}" ${s.available ? '' : 'disabled'}>${s.time}</button>`
+  ).join('');
+  attachTimeListeners();
+}
+
+attachTimeListeners();
+
+document.querySelectorAll('.date-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const date = btn.dataset.date;
+    dateInput.value = date;
+    timeGrid.innerHTML = '<div class="no-slots">Laster…</div>';
+    submitBtn.disabled = true;
+    try {
+      const res  = await fetch(`/booking/step3/slots?date=${date}&workerId=${workerId}&serviceId=${serviceId}`);
+      const data = await res.json();
+      renderSlots(data.workerAvailable ? data.slots : []);
+    } catch {
+      timeGrid.innerHTML = '<div class="no-slots">Kunne ikke laste tider</div>';
+    }
+  });
+});
+</script>
+
+<%- include('../includes/_foot') %>

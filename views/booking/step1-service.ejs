@@ -1,0 +1,53 @@
+<%- include('../includes/_head') %>
+<%- include('../includes/_header') %>
+<%- include('../includes/_booking-steps') %>
+
+<div class="booking-page">
+  <div class="container-booking">
+    <div class="page-bar" style="background:transparent;border:none;padding:0 0 1.25rem;">
+      <div class="page-bar-inner">
+        <a href="/" class="nav-back">← Tilbake</a>
+        <span class="page-bar-title">Velg tjeneste</span>
+      </div>
+    </div>
+
+    <form method="POST" action="/booking/step1" id="step1-form">
+      <div class="booking-card">
+        <% services.forEach(s => { %>
+        <label class="service-card <%= selected == s.id ? 'selected' : '' %>">
+          <input type="radio" name="serviceId" value="<%= s.id %>" style="display:none" <%= selected == s.id ? 'checked' : '' %>>
+          <div class="service-info">
+            <div class="service-name"><%= s.name %></div>
+            <div class="service-meta"><%= s.duration_minutes %> min<% if (s.description) { %> · <%= s.description %><% } %></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <span class="service-price">fra <%= s.price %> kr</span>
+            <span class="service-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+          </div>
+        </label>
+        <% }) %>
+      </div>
+
+      <div class="cta-row">
+        <button type="submit" class="btn btn-primary btn-full" id="submit-btn" <%= !selected ? 'disabled' : '' %>>
+          Velg frisør →
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    card.querySelector('input').checked = true;
+    document.getElementById('submit-btn').disabled = false;
+  });
+});
+</script>
+
+<%- include('../includes/_foot') %>
