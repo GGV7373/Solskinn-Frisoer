@@ -1,0 +1,60 @@
+<%- include('includes/_head') %>
+<%- include('includes/_header') %>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-eyebrow">Solskinn Frisør</div>
+    <h1 class="page-hero-title">Våre tjenester</h1>
+    <p class="page-hero-desc">Profesjonell hårstyling for enhver anledning – utforsk hva vi tilbyr og book enkelt på nett.</p>
+  </div>
+</section>
+
+<main>
+  <section class="inner-section">
+    <div class="container">
+      <div class="home-section-header">
+        <h2 class="home-section-title">Prisliste</h2>
+        <a href="/booking" class="btn btn-primary">Book time →</a>
+      </div>
+      <div class="services-grid">
+        <% services.forEach(s => { %>
+        <a href="/booking" class="service-tile">
+          <div class="service-tile-name"><%= s.name %></div>
+          <div class="service-tile-meta"><%= s.duration_minutes %> min<% if (s.description) { %> · <%= s.description %><% } %></div>
+          <div class="service-tile-price">fra <%= s.price %> kr</div>
+        </a>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="inner-section inner-section--alt" id="team">
+    <div class="container">
+      <h2 class="home-section-title" style="margin-bottom:1.5rem;">Møt teamet</h2>
+      <div class="workers-grid">
+        <% workers.forEach(w => { %>
+        <div class="worker-card">
+          <div class="emp-avatar <%= w.avatar_color %>"><%= w.initials %></div>
+          <div class="emp-name"><%= w.name %></div>
+          <div class="emp-role"><%= w.role %></div>
+          <div class="emp-days"><%= w.daysLabel %></div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="cta-band">
+  <div class="container">
+    <div class="cta-band-inner">
+      <div>
+        <h2 class="cta-band-title">Klar for en ny frisyre?</h2>
+        <p class="cta-band-desc">Book en time i dag — raskt og enkelt på nett.</p>
+      </div>
+      <a href="/booking" class="btn btn-lg">Book time →</a>
+    </div>
+  </div>
+</section>
+
+<%- include('includes/_foot') %>

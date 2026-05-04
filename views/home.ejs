@@ -3,37 +3,48 @@
 
 <section class="hero">
   <div class="container">
-    <div class="hero-inner">
-      <div>
-        <div class="hero-tag">Din lokale frisør i Trøndelag</div>
-        <h1 class="hero-title">Din beste<br><em>hårdag</em> starter her</h1>
-        <p class="hero-desc">Erfarne frisører, hjertelig service og gode priser siden 2018.</p>
-        <div class="hero-cta">
-          <a href="/booking" class="btn btn-primary btn-lg">Book time →</a>
-          <a href="#tjenester" class="btn btn-ghost btn-lg">Se tjenester</a>
-        </div>
+    <div class="hero-center">
+      <div class="hero-logo-wrap">
+        <img src="/images/logo.svg" alt="Solskinn Frisør" class="hero-logo-img">
       </div>
-      <div class="hero-visual">
-        <div class="hero-badge-wrap">
-          <div class="hero-badge"><div class="hero-badge-val">4</div><div class="hero-badge-lbl">Frisører</div></div>
-          <div class="hero-badge"><div class="hero-badge-val">100+</div><div class="hero-badge-lbl">Kunder/uke</div></div>
-          <div class="hero-badge"><div class="hero-badge-val">4.9</div><div class="hero-badge-lbl">Stjerner</div></div>
-          <div class="hero-badge"><div class="hero-badge-val">2018</div><div class="hero-badge-lbl">Etablert</div></div>
-        </div>
+      <div class="hero-tag">Din lokale frisør i Trondheim</div>
+      <h1 class="hero-title">Din beste <em>hårdag</em> starter her</h1>
+      <p class="hero-desc">Erfarne frisører, hjertelig service og gode priser siden 2018. Vi holder til i hjertet av Trondheim sentrum.</p>
+      <div class="hero-cta">
+        <a href="/booking" class="btn btn-primary btn-lg">Book time →</a>
+        <a href="/tjenester" class="btn btn-ghost btn-lg">Se tjenester</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-badge">
+        <div class="hero-badge-val">4</div>
+        <div class="hero-badge-lbl">Frisører</div>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-val">100+</div>
+        <div class="hero-badge-lbl">Kunder/uke</div>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-val">4.9 ★</div>
+        <div class="hero-badge-lbl">Google-vurdering</div>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-val">2018</div>
+        <div class="hero-badge-lbl">Etablert</div>
       </div>
     </div>
   </div>
 </section>
 
 <main>
-  <section class="home-section" id="tjenester">
+  <section class="home-section">
     <div class="container">
       <div class="home-section-header">
-        <h2 class="home-section-title">Tjenester</h2>
-        <a href="/booking" class="btn btn-primary">Book time →</a>
+        <h2 class="home-section-title">Populære tjenester</h2>
+        <a href="/tjenester" class="section-more">Se alle tjenester →</a>
       </div>
       <div class="services-grid">
-        <% services.forEach(s => { %>
+        <% services.slice(0, 4).forEach(s => { %>
         <a href="/booking" class="service-tile">
           <div class="service-tile-name"><%= s.name %></div>
           <div class="service-tile-meta"><%= s.duration_minutes %> min<% if (s.description) { %> · <%= s.description %><% } %></div>
@@ -48,6 +59,7 @@
     <div class="container">
       <div class="home-section-header">
         <h2 class="home-section-title">Våre frisører</h2>
+        <a href="/tjenester#team" class="section-more">Møt teamet →</a>
       </div>
       <div class="workers-grid">
         <% workers.forEach(w => { %>
@@ -62,28 +74,69 @@
     </div>
   </section>
 
-  <section class="home-section" id="aapningstider">
+  <section class="home-section home-section--alt">
     <div class="container">
-      <h2 class="home-section-title" style="margin-bottom:1.5rem;">Åpningstider</h2>
-      <div class="hours-cols">
-        <table class="hours-table">
-          <tr><td>Mandag – fredag</td><td>09:00 – 18:00</td></tr>
-          <tr><td>Lørdag</td><td>09:00 – 15:00</td></tr>
-          <tr><td>Søndag</td><td class="hours-closed">Stengt</td></tr>
-        </table>
-        <div class="info-box">
-          <strong>Bestilling anbefales.</strong> Vi tar imot drop-in når vi har ledig kapasitet.
-          Ring oss på <strong>37 02 11 xx</strong> for spørsmål.
+      <div class="about-cols">
+        <div>
+          <div class="page-hero-eyebrow">Om oss</div>
+          <h2 class="home-section-title" style="margin-bottom:1rem;">En salong med hjertet på rette sted</h2>
+          <p style="color:var(--sand-500);line-height:1.8;margin-bottom:1rem;">
+            Solskinn Frisør åpnet dørene i 2018 med én enkelt ambisjon: å gi Trondheims innbyggere
+            en frisøropplevelse utenom det vanlige. Vi kombinerer solid fagkunnskap med en varm og
+            uformell atmosfære der alle føler seg velkomne.
+          </p>
+          <p style="color:var(--sand-500);line-height:1.8;margin-bottom:1.75rem;">
+            Teamet vårt består av fire erfarne frisører med spisskompetanse innen alt fra klassiske
+            klipp til moderne fargeteknikker. Vi bruker kun miljøvennlige produkter fra <strong>Wella</strong>
+            og <strong>Redken</strong>.
+          </p>
+          <a href="/aapningstider" class="btn btn-ghost">Finn oss her →</a>
+        </div>
+        <div class="about-info-cards">
+          <div class="about-info-card">
+            <div class="about-info-icon">📍</div>
+            <div>
+              <div class="about-info-label">Adresse</div>
+              <div class="about-info-val">Kongens gate 12<br>7013 Trondheim</div>
+            </div>
+          </div>
+          <div class="about-info-card">
+            <div class="about-info-icon">📞</div>
+            <div>
+              <div class="about-info-label">Telefon</div>
+              <div class="about-info-val"><a href="tel:73552210">73 55 22 10</a></div>
+            </div>
+          </div>
+          <div class="about-info-card">
+            <div class="about-info-icon">✉️</div>
+            <div>
+              <div class="about-info-label">E-post</div>
+              <div class="about-info-val"><a href="mailto:post@solskinnfrisor.no">post@solskinnfrisor.no</a></div>
+            </div>
+          </div>
+          <div class="about-info-card">
+            <div class="about-info-icon">🕐</div>
+            <div>
+              <div class="about-info-label">Åpningstider</div>
+              <div class="about-info-val">Man–fre 09–18<br>Lør 09–15</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="site-footer">
+<section class="cta-band">
   <div class="container">
-    <strong>Solskinn Frisør</strong> · Trøndelag · Tlf: 37 02 11 xx
+    <div class="cta-band-inner">
+      <div>
+        <h2 class="cta-band-title">Klar for en ny frisyre?</h2>
+        <p class="cta-band-desc">Book en time i dag — raskt og enkelt på nett. Eller ring oss på <strong>73 55 22 10</strong>.</p>
+      </div>
+      <a href="/booking" class="btn btn-lg">Book time →</a>
+    </div>
   </div>
-</footer>
+</section>
 
 <%- include('includes/_foot') %>
