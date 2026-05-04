@@ -428,3 +428,16 @@ a { text-decoration: none; color: inherit; }
   .schedule-grid-head,
   .schedule-row { grid-template-columns: 110px 50px 1fr 1fr; gap: .625rem; }
 }
+
+/* ── Ansatte / Tjenester forms ── */
+.admin-form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1.25rem;
+  align-items: flex-end;
+  padding: 1rem 1.5rem 1.25rem;
+}
+.admin-field { display: flex; flex-direction: column; gap: .3rem; }
+.admin-field--action { padding-bottom: 2px; }
+.td-actions { white-space: nowrap; display: flex; gap: .4rem; align-items: center; }
+.edit-row td { background: #FAFAF7; padding: .25rem 1rem; }

@@ -1,0 +1,142 @@
+<%- include('_head', { title: 'Tjenester', page: 'tjenester' }) %>
+
+<div class="admin-page-header">
+  <h1 class="admin-page-title">Tjenester</h1>
+  <span class="admin-page-sub">Legg til og rediger tjenester som tilbys</span>
+</div>
+
+<% if (saved) { %>
+<div class="admin-alert admin-alert--success">Endringer lagret.</div>
+<% } %>
+
+<%# ── Add new service ─────────────────────────────────────────────────────── %>
+<div class="admin-card" style="margin-bottom:1.5rem;">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Legg til ny tjeneste</h2>
+  </div>
+  <form method="POST" action="/admin/tjenester" class="admin-form-grid">
+    <div class="admin-field">
+      <label class="admin-label" for="new-name">Navn</label>
+      <input class="admin-input" id="new-name" name="name" type="text" required placeholder="Herreklipp">
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="new-duration">Varighet (min)</label>
+      <input class="admin-input" id="new-duration" name="duration_minutes" type="number" min="5" step="5" required placeholder="30" style="width:100px;">
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="new-price">Pris (kr)</label>
+      <input class="admin-input" id="new-price" name="price" type="number" min="0" required placeholder="350" style="width:100px;">
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="new-desc">Beskrivelse</label>
+      <input class="admin-input" id="new-desc" name="description" type="text" placeholder="Valgfri beskrivelse">
+    </div>
+    <div class="admin-field admin-field--action">
+      <button class="admin-btn admin-btn--primary" type="submit">Legg til</button>
+    </div>
+  </form>
+</div>
+
+<%# ── Existing services ───────────────────────────────────────────────────── %>
+<div class="admin-card">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Alle tjenester <span class="admin-count">(<%= services.length %>)</span></h2>
+  </div>
+
+  <% if (services.length === 0) { %>
+  <div class="admin-empty">Ingen tjenester lagt til ennå.</div>
+  <% } else { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Navn</th>
+          <th>Varighet</th>
+          <th>Pris</th>
+          <th>Beskrivelse</th>
+          <th>Rekkefølge</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% services.forEach(s => { %>
+        <tr id="row-<%= s.id %>" class="<%= !s.is_active ? 'tr-cancelled' : '' %>">
+          <td class="td-name"><%= s.name %></td>
+          <td><%= s.duration_minutes %> min</td>
+          <td class="td-price"><%= s.price %> kr</td>
+          <td><%= s.description || '—' %></td>
+          <td><%= s.sort_order %></td>
+          <td>
+            <% if (s.is_active) { %>
+            <span class="status-badge status-badge--active">Aktiv</span>
+            <% } else { %>
+            <span class="status-badge status-badge--cancelled">Inaktiv</span>
+            <% } %>
+          </td>
+          <td class="td-actions">
+            <button class="admin-btn admin-btn--ghost admin-btn--sm" onclick="openEdit(<%= s.id %>)">Rediger</button>
+            <% if (s.is_active) { %>
+            <form method="POST" action="/admin/tjenester/<%= s.id %>/slett" style="display:inline" onsubmit="return confirm('Deaktiver tjenesten <%= s.name %>?')">
+              <button class="admin-btn admin-btn--danger admin-btn--sm" type="submit">Deaktiver</button>
+            </form>
+            <% } %>
+          </td>
+        </tr>
+        <%# ── Inline edit row ──────────────────────────────────────────────── %>
+        <tr id="edit-<%= s.id %>" style="display:none;" class="edit-row">
+          <td colspan="7">
+            <form method="POST" action="/admin/tjenester/<%= s.id %>" class="admin-form-grid" style="padding:.5rem 0;">
+              <div class="admin-field">
+                <label class="admin-label">Navn</label>
+                <input class="admin-input" name="name" type="text" value="<%= s.name %>" required>
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Varighet (min)</label>
+                <input class="admin-input" name="duration_minutes" type="number" min="5" step="5" value="<%= s.duration_minutes %>" required style="width:100px;">
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Pris (kr)</label>
+                <input class="admin-input" name="price" type="number" min="0" value="<%= s.price %>" required style="width:100px;">
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Beskrivelse</label>
+                <input class="admin-input" name="description" type="text" value="<%= s.description || '' %>">
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Rekkefølge</label>
+                <input class="admin-input" name="sort_order" type="number" min="0" value="<%= s.sort_order %>" style="width:80px;">
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Status</label>
+                <select class="admin-input" name="is_active">
+                  <option value="true"  <%= s.is_active ? 'selected' : '' %>>Aktiv</option>
+                  <option value="false" <%= !s.is_active ? 'selected' : '' %>>Inaktiv</option>
+                </select>
+              </div>
+              <div class="admin-field admin-field--action">
+                <button class="admin-btn admin-btn--primary" type="submit">Lagre</button>
+                <button class="admin-btn admin-btn--ghost" type="button" onclick="closeEdit(<%= s.id %>)">Avbryt</button>
+              </div>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<script>
+function openEdit(id) {
+  document.getElementById('edit-' + id).style.display = '';
+  document.getElementById('row-' + id).style.display = 'none';
+}
+function closeEdit(id) {
+  document.getElementById('edit-' + id).style.display = 'none';
+  document.getElementById('row-' + id).style.display = '';
+}
+</script>
+
+<%- include('_foot') %>

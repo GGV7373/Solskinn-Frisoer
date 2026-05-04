@@ -187,3 +187,95 @@ exports.postArbeidsplan = async (req, res, next) => {
     client.release();
   }
 };
+
+// ── Ansatte ───────────────────────────────────────────────────────────────────
+
+const AVATAR_COLORS = ['amber', 'coral', 'teal', 'gray', 'blue', 'green', 'purple', 'rose'];
+
+exports.getAnsatte = async (req, res, next) => {
+  try {
+    const result = await pool.query('SELECT * FROM workers ORDER BY id');
+    res.render('admin/ansatte', {
+      page: 'ansatte',
+      workers: result.rows,
+      colors: AVATAR_COLORS,
+      saved: req.query.saved || null,
+      error: null,
+    });
+  } catch (err) { next(err); }
+};
+
+exports.postAnsatt = async (req, res, next) => {
+  const { name, initials, role, avatar_color } = req.body;
+  try {
+    await pool.query(
+      'INSERT INTO workers (name, initials, role, avatar_color) VALUES ($1,$2,$3,$4)',
+      [name.trim(), initials.trim().toUpperCase(), role.trim(), avatar_color]
+    );
+    res.redirect('/admin/ansatte?saved=1');
+  } catch (err) { next(err); }
+};
+
+exports.postEditAnsatt = async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  const { name, initials, role, avatar_color, is_active } = req.body;
+  try {
+    await pool.query(
+      'UPDATE workers SET name=$1, initials=$2, role=$3, avatar_color=$4, is_active=$5 WHERE id=$6',
+      [name.trim(), initials.trim().toUpperCase(), role.trim(), avatar_color, is_active === 'true', id]
+    );
+    res.redirect('/admin/ansatte?saved=1');
+  } catch (err) { next(err); }
+};
+
+exports.deleteAnsatt = async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await pool.query('UPDATE workers SET is_active = FALSE WHERE id = $1', [id]);
+    res.redirect('/admin/ansatte');
+  } catch (err) { next(err); }
+};
+
+// ── Tjenester ─────────────────────────────────────────────────────────────────
+
+exports.getTjenester = async (req, res, next) => {
+  try {
+    const result = await pool.query('SELECT * FROM services ORDER BY sort_order, id');
+    res.render('admin/tjenester', {
+      page: 'tjenester',
+      services: result.rows,
+      saved: req.query.saved || null,
+    });
+  } catch (err) { next(err); }
+};
+
+exports.postTjeneste = async (req, res, next) => {
+  const { name, duration_minutes, price, description } = req.body;
+  try {
+    await pool.query(
+      'INSERT INTO services (name, duration_minutes, price, description) VALUES ($1,$2,$3,$4)',
+      [name.trim(), parseInt(duration_minutes, 10), parseInt(price, 10), (description || '').trim() || null]
+    );
+    res.redirect('/admin/tjenester?saved=1');
+  } catch (err) { next(err); }
+};
+
+exports.postEditTjeneste = async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  const { name, duration_minutes, price, description, is_active, sort_order } = req.body;
+  try {
+    await pool.query(
+      'UPDATE services SET name=$1, duration_minutes=$2, price=$3, description=$4, is_active=$5, sort_order=$6 WHERE id=$7',
+      [name.trim(), parseInt(duration_minutes, 10), parseInt(price, 10), (description || '').trim() || null, is_active === 'true', parseInt(sort_order, 10) || 0, id]
+    );
+    res.redirect('/admin/tjenester?saved=1');
+  } catch (err) { next(err); }
+};
+
+exports.deleteTjeneste = async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await pool.query('UPDATE services SET is_active = FALSE WHERE id = $1', [id]);
+    res.redirect('/admin/tjenester');
+  } catch (err) { next(err); }
+};

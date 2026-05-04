@@ -1,0 +1,144 @@
+<%- include('_head', { title: 'Ansatte', page: 'ansatte' }) %>
+
+<div class="admin-page-header">
+  <h1 class="admin-page-title">Ansatte</h1>
+  <span class="admin-page-sub">Legg til og rediger frisører</span>
+</div>
+
+<% if (saved) { %>
+<div class="admin-alert admin-alert--success">Endringer lagret.</div>
+<% } %>
+
+<%# ── Add new worker ──────────────────────────────────────────────────────── %>
+<div class="admin-card" style="margin-bottom:1.5rem;">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Legg til ny ansatt</h2>
+  </div>
+  <form method="POST" action="/admin/ansatte" class="admin-form-grid">
+    <div class="admin-field">
+      <label class="admin-label" for="new-name">Navn</label>
+      <input class="admin-input" id="new-name" name="name" type="text" required placeholder="Ola Nordmann">
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="new-initials">Initialer</label>
+      <input class="admin-input" id="new-initials" name="initials" type="text" maxlength="3" required placeholder="ON" style="width:80px;">
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="new-role">Rolle</label>
+      <input class="admin-input" id="new-role" name="role" type="text" required placeholder="Frisør">
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="new-color">Farge</label>
+      <select class="admin-input" id="new-color" name="avatar_color">
+        <% colors.forEach(c => { %>
+        <option value="<%= c %>"><%= c %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="admin-field admin-field--action">
+      <button class="admin-btn admin-btn--primary" type="submit">Legg til</button>
+    </div>
+  </form>
+</div>
+
+<%# ── Existing workers ────────────────────────────────────────────────────── %>
+<div class="admin-card">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Alle ansatte <span class="admin-count">(<%= workers.length %>)</span></h2>
+  </div>
+
+  <% if (workers.length === 0) { %>
+  <div class="admin-empty">Ingen ansatte lagt til ennå.</div>
+  <% } else { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Avatar</th>
+          <th>Navn</th>
+          <th>Initialer</th>
+          <th>Rolle</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% workers.forEach(w => { %>
+        <tr id="row-<%= w.id %>" class="<%= !w.is_active ? 'tr-cancelled' : '' %>">
+          <td><div class="emp-avatar <%= w.avatar_color %> emp-avatar--sm"><%= w.initials %></div></td>
+          <td class="td-name"><%= w.name %></td>
+          <td><%= w.initials %></td>
+          <td><%= w.role %></td>
+          <td>
+            <% if (w.is_active) { %>
+            <span class="status-badge status-badge--active">Aktiv</span>
+            <% } else { %>
+            <span class="status-badge status-badge--cancelled">Inaktiv</span>
+            <% } %>
+          </td>
+          <td class="td-actions">
+            <button class="admin-btn admin-btn--ghost admin-btn--sm" onclick="openEdit(<%= w.id %>)">Rediger</button>
+            <% if (w.is_active) { %>
+            <form method="POST" action="/admin/ansatte/<%= w.id %>/slett" style="display:inline" onsubmit="return confirm('Deaktiver <%= w.name %>?')">
+              <button class="admin-btn admin-btn--danger admin-btn--sm" type="submit">Deaktiver</button>
+            </form>
+            <% } %>
+          </td>
+        </tr>
+        <%# ── Inline edit row ──────────────────────────────────────────────── %>
+        <tr id="edit-<%= w.id %>" style="display:none;" class="edit-row">
+          <td colspan="6">
+            <form method="POST" action="/admin/ansatte/<%= w.id %>" class="admin-form-grid" style="padding:.5rem 0;">
+              <div class="admin-field">
+                <label class="admin-label">Navn</label>
+                <input class="admin-input" name="name" type="text" value="<%= w.name %>" required>
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Initialer</label>
+                <input class="admin-input" name="initials" type="text" maxlength="3" value="<%= w.initials %>" required style="width:80px;">
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Rolle</label>
+                <input class="admin-input" name="role" type="text" value="<%= w.role %>" required>
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Farge</label>
+                <select class="admin-input" name="avatar_color">
+                  <% colors.forEach(c => { %>
+                  <option value="<%= c %>" <%= w.avatar_color === c ? 'selected' : '' %>><%= c %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Status</label>
+                <select class="admin-input" name="is_active">
+                  <option value="true"  <%= w.is_active ? 'selected' : '' %>>Aktiv</option>
+                  <option value="false" <%= !w.is_active ? 'selected' : '' %>>Inaktiv</option>
+                </select>
+              </div>
+              <div class="admin-field admin-field--action">
+                <button class="admin-btn admin-btn--primary" type="submit">Lagre</button>
+                <button class="admin-btn admin-btn--ghost" type="button" onclick="closeEdit(<%= w.id %>)">Avbryt</button>
+              </div>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<script>
+function openEdit(id) {
+  document.getElementById('edit-' + id).style.display = '';
+  document.getElementById('row-' + id).style.display = 'none';
+}
+function closeEdit(id) {
+  document.getElementById('edit-' + id).style.display = 'none';
+  document.getElementById('row-' + id).style.display = '';
+}
+</script>
+
+<%- include('_foot') %>
