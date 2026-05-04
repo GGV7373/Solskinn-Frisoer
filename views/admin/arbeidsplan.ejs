@@ -1,0 +1,72 @@
+<%- include('_head', { title: 'Arbeidsplan', page: 'arbeidsplan' }) %>
+
+<div class="admin-page-header">
+  <h1 class="admin-page-title">Arbeidsplan</h1>
+  <span class="admin-page-sub">Angi hvilke dager og tider hver frisør jobber</span>
+</div>
+
+<% if (saved) { %>
+<div class="admin-alert admin-alert--success">Arbeidsplan lagret.</div>
+<% } %>
+
+<% workers.forEach(worker => { %>
+<div class="admin-card schedule-card">
+  <div class="schedule-card-header">
+    <div class="emp-avatar <%= worker.avatar_color %> emp-avatar--sm"><%= worker.initials %></div>
+    <div>
+      <div class="schedule-worker-name"><%= worker.name %></div>
+      <div class="schedule-worker-role"><%= worker.role %></div>
+    </div>
+  </div>
+
+  <form method="POST" action="/admin/arbeidsplan/<%= worker.id %>">
+    <div class="schedule-grid">
+      <div class="schedule-grid-head">
+        <span>Dag</span>
+        <span>Aktiv</span>
+        <span>Fra</span>
+        <span>Til</span>
+      </div>
+
+      <% days.forEach(day => { %>
+      <%
+        const hasSched = scheduleMap[worker.id] && scheduleMap[worker.id][day.num];
+        const startVal = hasSched ? scheduleMap[worker.id][day.num].start : '09:00';
+        const endVal   = hasSched ? scheduleMap[worker.id][day.num].end   : '18:00';
+        const isChecked = !!hasSched;
+      %>
+      <div class="schedule-row" id="row-<%= worker.id %>-<%= day.num %>">
+        <span class="schedule-day-label"><%= day.label %></span>
+        <label class="schedule-toggle">
+          <input type="checkbox" name="days" value="<%= day.num %>"
+            <%= isChecked ? 'checked' : '' %>
+            onchange="toggleRow('<%= worker.id %>','<%= day.num %>',this.checked)">
+          <span class="toggle-track"></span>
+        </label>
+        <input class="admin-input admin-input--time" type="time" name="start_<%= day.num %>"
+          value="<%= startVal %>" <%= !isChecked ? 'disabled' : '' %>>
+        <input class="admin-input admin-input--time" type="time" name="end_<%= day.num %>"
+          value="<%= endVal %>" <%= !isChecked ? 'disabled' : '' %>>
+      </div>
+      <% }) %>
+    </div>
+
+    <div class="schedule-footer">
+      <button class="admin-btn admin-btn--primary" type="submit">Lagre arbeidsplan</button>
+    </div>
+  </form>
+</div>
+<% }) %>
+
+<script>
+function toggleRow(workerId, dayNum, active) {
+  const row = document.getElementById('row-' + workerId + '-' + dayNum);
+  row.querySelectorAll('input[type="time"]').forEach(el => {
+    el.disabled = !active;
+    if (active) el.classList.remove('disabled');
+    else        el.classList.add('disabled');
+  });
+}
+</script>
+
+<%- include('_foot') %>

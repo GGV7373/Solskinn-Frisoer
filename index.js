@@ -25,6 +25,7 @@ app.use(session({
 
 app.use('/',        require('./routes/index'));
 app.use('/booking', require('./routes/booking'));
+app.use('/admin',   require('./routes/admin'));
 
 app.use((req, res) => {
   res.status(404).render('error', { code: 404, message: 'Side ikke funnet' });

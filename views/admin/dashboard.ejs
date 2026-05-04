@@ -1,0 +1,67 @@
+<%- include('_head', { title: 'Oversikt', page: 'dashboard' }) %>
+
+<div class="admin-page-header">
+  <h1 class="admin-page-title">Oversikt</h1>
+  <span class="admin-page-sub">Kommende bestillinger og statistikk</span>
+</div>
+
+<div class="admin-stats-grid">
+  <div class="admin-stat-card">
+    <div class="admin-stat-label">I dag</div>
+    <div class="admin-stat-value"><%= stats.today %></div>
+    <div class="admin-stat-desc">bestillinger</div>
+  </div>
+  <div class="admin-stat-card">
+    <div class="admin-stat-label">Denne uken</div>
+    <div class="admin-stat-value"><%= stats.week %></div>
+    <div class="admin-stat-desc">bestillinger</div>
+  </div>
+  <div class="admin-stat-card">
+    <div class="admin-stat-label">Totalt</div>
+    <div class="admin-stat-value"><%= stats.total %></div>
+    <div class="admin-stat-desc">aktive bestillinger</div>
+  </div>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Kommende bestillinger</h2>
+    <a href="/admin/bestillinger" class="admin-link">Se alle →</a>
+  </div>
+
+  <% if (upcoming.length === 0) { %>
+  <div class="admin-empty">Ingen kommende bestillinger.</div>
+  <% } else { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Dato</th>
+          <th>Tid</th>
+          <th>Kunde</th>
+          <th>Frisør</th>
+          <th>Tjeneste</th>
+          <th>Kode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% upcoming.forEach(b => { %>
+        <tr>
+          <td><%= b.dateDisplay %></td>
+          <td class="td-time"><%= b.startTime %> – <%= b.endTime %></td>
+          <td>
+            <div class="td-name"><%= b.customer_name %></div>
+            <div class="td-sub"><a href="tel:<%= b.customer_phone %>"><%= b.customer_phone %></a></div>
+          </td>
+          <td><%= b.worker_name %></td>
+          <td><%= b.service_name %></td>
+          <td><span class="booking-code-tag"><%= b.booking_code %></span></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('_foot') %>

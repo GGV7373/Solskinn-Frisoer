@@ -1,0 +1,90 @@
+<%- include('_head', { title: 'Bestillinger', page: 'bestillinger' }) %>
+
+<div class="admin-page-header">
+  <h1 class="admin-page-title">Bestillinger</h1>
+  <span class="admin-page-sub">Alle registrerte bestillinger</span>
+</div>
+
+<div class="admin-card" style="margin-bottom:1.25rem;">
+  <form method="GET" action="/admin/bestillinger" class="admin-filter-row">
+    <div class="admin-field">
+      <label class="admin-label" for="dato">Dato</label>
+      <input class="admin-input" type="date" id="dato" name="dato" value="<%= filters.dato %>">
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="arbeider">Frisør</label>
+      <select class="admin-input" id="arbeider" name="arbeider">
+        <option value="">Alle frisører</option>
+        <% workers.forEach(w => { %>
+        <option value="<%= w.id %>" <%= filters.arbeider == w.id ? 'selected' : '' %>><%= w.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="admin-filter-actions">
+      <button class="admin-btn admin-btn--primary" type="submit">Filtrer</button>
+      <a href="/admin/bestillinger" class="admin-btn admin-btn--ghost">Nullstill</a>
+    </div>
+  </form>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <h2 class="admin-card-title">Resultater <span class="admin-count">(<%= bookings.length %>)</span></h2>
+  </div>
+
+  <% if (bookings.length === 0) { %>
+  <div class="admin-empty">Ingen bestillinger funnet.</div>
+  <% } else { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Kode</th>
+          <th>Dato</th>
+          <th>Tid</th>
+          <th>Kunde</th>
+          <th>Kontakt</th>
+          <th>Frisør</th>
+          <th>Tjeneste</th>
+          <th>Pris</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% bookings.forEach(b => { %>
+        <tr class="<%= b.status === 'cancelled' ? 'tr-cancelled' : '' %>">
+          <td><span class="booking-code-tag"><%= b.booking_code %></span></td>
+          <td><%= b.dateDisplay %></td>
+          <td class="td-time"><%= b.startTime %> – <%= b.endTime %></td>
+          <td class="td-name"><%= b.customer_name %></td>
+          <td>
+            <div><a href="tel:<%= b.customer_phone %>"><%= b.customer_phone %></a></div>
+            <% if (b.customer_email) { %><div class="td-sub"><%= b.customer_email %></div><% } %>
+          </td>
+          <td><%= b.worker_name %></td>
+          <td><%= b.service_name %></td>
+          <td class="td-price"><%= b.price %> kr</td>
+          <td>
+            <% if (b.status === 'cancelled') { %>
+            <span class="status-badge status-badge--cancelled">Avlyst</span>
+            <% } else { %>
+            <span class="status-badge status-badge--active">Aktiv</span>
+            <% } %>
+          </td>
+          <td>
+            <% if (b.status !== 'cancelled') { %>
+            <form method="POST" action="/admin/bestillinger/<%= b.id %>/avlys" onsubmit="return confirm('Avlyse bestilling <%= b.booking_code %>?')">
+              <button class="admin-btn admin-btn--danger admin-btn--sm" type="submit">Avlys</button>
+            </form>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('_foot') %>
