@@ -1,0 +1,341 @@
+
+<style>
+  :root {
+    --amber-50: #FAEEDA; --amber-100: #FAC775; --amber-200: #EF9F27;
+    --amber-400: #BA7517; --amber-600: #854F0B; --amber-800: #633806;
+    --coral-50: #FAECE7; --coral-100: #F5C4B3; --coral-200: #F0997B;
+    --coral-400: #D85A30; --coral-600: #993C1D;
+    --gray-50: #F1EFE8; --gray-100: #D3D1C7; --gray-200: #B4B2A9;
+    --gray-400: #888780; --gray-600: #5F5E5A; --gray-800: #444441; --gray-900: #2C2C2A;
+    --teal-50: #E1F5EE; --teal-200: #5DCAA5; --teal-600: #0F6E56; --teal-800: #085041;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-sans); }
+  .phone-frame {
+    width: 360px; margin: 1.5rem auto; border-radius: 32px;
+    border: 2px solid var(--color-border-secondary);
+    overflow: hidden; background: var(--color-background-primary);
+    min-height: 680px;
+  }
+  .status-bar {
+    background: var(--amber-50); padding: 8px 20px 6px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; color: var(--amber-800);
+    border-bottom: 0.5px solid var(--amber-100);
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  /* NAV */
+  .app-nav {
+    background: var(--amber-50); padding: 14px 20px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 0.5px solid var(--amber-100);
+  }
+  .logo-text { font-size: 18px; font-weight: 500; color: var(--amber-600); letter-spacing: -0.3px; }
+  .logo-sub { font-size: 10px; color: var(--amber-400); letter-spacing: 1.5px; text-transform: uppercase; }
+  .menu-icon { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+  .menu-icon span { width: 18px; height: 1.5px; background: var(--amber-400); display: block; }
+  /* HERO */
+  .hero { padding: 24px 20px 20px; background: var(--amber-50); }
+  .hero-tag { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber-400); margin-bottom: 8px; }
+  .hero-title { font-size: 26px; font-weight: 500; color: var(--amber-800); line-height: 1.2; margin-bottom: 8px; }
+  .hero-title em { font-style: italic; color: var(--coral-400); }
+  .hero-desc { font-size: 13px; color: var(--gray-600); line-height: 1.6; margin-bottom: 18px; }
+  .btn-primary {
+    background: var(--amber-400); color: var(--amber-50);
+    border: none; padding: 11px 22px; border-radius: 8px;
+    font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: 0.2px;
+  }
+  .btn-primary:hover { background: var(--amber-600); }
+  .btn-ghost {
+    background: transparent; color: var(--amber-600);
+    border: 0.5px solid var(--amber-200); padding: 10px 18px;
+    border-radius: 8px; font-size: 13px; cursor: pointer; margin-left: 8px;
+  }
+  /* STATS ROW */
+  .stats-row { display: flex; gap: 8px; padding: 14px 20px; background: var(--color-background-primary); }
+  .stat-card { flex: 1; background: var(--gray-50); border-radius: 8px; padding: 10px; text-align: center; }
+  .stat-num { font-size: 16px; font-weight: 500; color: var(--amber-800); }
+  .stat-lbl { font-size: 10px; color: var(--gray-400); margin-top: 2px; letter-spacing: 0.5px; }
+  /* SECTION */
+  .section { padding: 18px 20px 0; }
+  .section-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-400); margin-bottom: 12px; }
+  /* SERVICE CARDS */
+  .service-list { display: flex; flex-direction: column; gap: 8px; padding: 0 20px 16px; }
+  .service-card {
+    border: 0.5px solid var(--color-border-tertiary); border-radius: 10px;
+    padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; background: var(--color-background-primary);
+  }
+  .service-card:hover { border-color: var(--amber-200); }
+  .service-card.selected { border: 1.5px solid var(--amber-400); background: var(--amber-50); }
+  .service-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .service-dur { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+  .service-price { font-size: 14px; font-weight: 500; color: var(--amber-600); }
+  .service-check { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--amber-400); display: flex; align-items: center; justify-content: center; margin-left: 8px; }
+  .service-check.on { background: var(--amber-400); }
+  /* EMPLOYEE CARDS */
+  .emp-row { display: flex; gap: 10px; padding: 0 20px 16px; overflow-x: auto; }
+  .emp-card { min-width: 90px; border-radius: 10px; border: 0.5px solid var(--color-border-tertiary); padding: 12px 8px; text-align: center; cursor: pointer; }
+  .emp-card.selected { border: 1.5px solid var(--amber-400); background: var(--amber-50); }
+  .emp-avatar { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; }
+  .emp-name { font-size: 11px; font-weight: 500; color: var(--color-text-primary); }
+  .emp-role { font-size: 10px; color: var(--gray-400); margin-top: 1px; }
+  /* TIME GRID */
+  .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 20px 16px; }
+  .time-slot { border: 0.5px solid var(--color-border-tertiary); border-radius: 7px; padding: 8px 4px; text-align: center; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; }
+  .time-slot:hover { border-color: var(--amber-200); color: var(--amber-600); }
+  .time-slot.selected { border: 1.5px solid var(--amber-400); background: var(--amber-50); color: var(--amber-600); font-weight: 500; }
+  .time-slot.taken { color: var(--gray-200); cursor: default; background: var(--gray-50); }
+  /* BOTTOM NAV */
+  .bottom-nav {
+    display: flex; background: var(--color-background-primary);
+    border-top: 0.5px solid var(--color-border-tertiary); padding: 10px 0 14px;
+  }
+  .nav-item { flex: 1; text-align: center; cursor: pointer; padding: 4px 0; }
+  .nav-icon { font-size: 16px; margin-bottom: 2px; }
+  .nav-label { font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--gray-400); }
+  .nav-item.active .nav-label { color: var(--amber-600); }
+  .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--amber-400); margin: 2px auto 0; }
+  /* CONFIRM CARD */
+  .confirm-card { margin: 0 20px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: 12px; padding: 16px; }
+  .confirm-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; }
+  .confirm-row:last-child { border-bottom: none; }
+  .confirm-label { color: var(--gray-400); }
+  .confirm-val { font-weight: 500; color: var(--color-text-primary); }
+  .total-row { display: flex; justify-content: space-between; margin: 0 20px 16px; padding: 12px; background: var(--amber-50); border-radius: 8px; }
+  .total-label { font-size: 12px; color: var(--amber-600); }
+  .total-price { font-size: 18px; font-weight: 500; color: var(--amber-800); }
+  /* DATE STRIP */
+  .date-strip { display: flex; gap: 6px; padding: 0 20px 14px; overflow-x: auto; }
+  .date-btn { min-width: 48px; border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); padding: 8px 4px; text-align: center; cursor: pointer; }
+  .date-btn.selected { background: var(--amber-400); border-color: var(--amber-400); }
+  .date-day { font-size: 10px; color: var(--gray-400); letter-spacing: 0.5px; text-transform: uppercase; }
+  .date-num { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-top: 1px; }
+  .date-btn.selected .date-day, .date-btn.selected .date-num { color: var(--amber-50); }
+  /* PAGE TABS */
+  .page-tabs { display: flex; gap: 0; background: var(--color-background-secondary); border-radius: 8px; margin: 0.75rem auto; width: fit-content; padding: 3px; }
+  .page-tab { padding: 6px 14px; font-size: 12px; border-radius: 6px; cursor: pointer; color: var(--color-text-secondary); border: none; background: none; }
+  .page-tab.active { background: var(--color-background-primary); color: var(--amber-600); font-weight: 500; border: 0.5px solid var(--color-border-tertiary); }
+  .success-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--teal-50); margin: 20px auto 12px; display: flex; align-items: center; justify-content: center; }
+  .chip { display: inline-block; background: var(--teal-50); color: var(--teal-600); font-size: 10px; padding: 3px 8px; border-radius: 12px; margin-bottom: 12px; }
+</style>
+
+<h2 class="sr-only">UI/UX-mockup for Solskinn Frisør — viser hjemskjerm, bestilling og bekreftelse</h2>
+
+<div style="text-align: center;">
+  <div class="page-tabs">
+    <button class="page-tab active" onclick="showScreen('home')">Hjem</button>
+    <button class="page-tab" onclick="showScreen('book')">Bestill</button>
+    <button class="page-tab" onclick="showScreen('confirm')">Bekreftelse</button>
+  </div>
+</div>
+
+<div class="phone-frame">
+
+  <!-- HOME SCREEN -->
+  <div class="screen active" id="screen-home">
+    <div class="status-bar">
+      <span>09:41</span><span>◆ Arendal</span>
+    </div>
+    <div class="app-nav">
+      <div>
+        <div class="logo-text">Solskinn</div>
+        <div class="logo-sub">Frisør</div>
+      </div>
+      <div class="menu-icon">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-tag">Din lokale frisør i Arendal</div>
+      <div class="hero-title">Din beste<br><em>hårdag</em> starter her</div>
+      <div class="hero-desc">Erfarne frisører, hjertelig service og gode priser siden 2018.</div>
+      <button class="btn-primary" onclick="showScreen('book')">Book time ↗</button>
+      <button class="btn-ghost">Se priser</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">4</div><div class="stat-lbl">Frisører</div></div>
+      <div class="stat-card"><div class="stat-num">100+</div><div class="stat-lbl">Kunder/uke</div></div>
+      <div class="stat-card"><div class="stat-num">4.9</div><div class="stat-lbl">Stjerner</div></div>
+    </div>
+    <div class="section"><div class="section-title">Populære tjenester</div></div>
+    <div class="service-list">
+      <div class="service-card">
+        <div><div class="service-name">Herreklipp</div><div class="service-dur">30 min</div></div>
+        <div style="display:flex;align-items:center"><div class="service-price">fr. 350 kr</div></div>
+      </div>
+      <div class="service-card">
+        <div><div class="service-name">Dameklipp</div><div class="service-dur">45 min</div></div>
+        <div style="display:flex;align-items:center"><div class="service-price">fr. 450 kr</div></div>
+      </div>
+      <div class="service-card">
+        <div><div class="service-name">Farging + klipp</div><div class="service-dur">90 min</div></div>
+        <div style="display:flex;align-items:center"><div class="service-price">fr. 800 kr</div></div>
+      </div>
+    </div>
+    <div class="section"><div class="section-title">Åpningstider</div></div>
+    <div style="padding: 0 20px 20px; font-size: 13px; color: var(--color-text-secondary); line-height: 2;">
+      <div style="display:flex;justify-content:space-between"><span>Man – Fre</span><span style="color:var(--amber-600);font-weight:500">09:00 – 18:00</span></div>
+      <div style="display:flex;justify-content:space-between"><span>Lørdag</span><span style="color:var(--amber-600);font-weight:500">09:00 – 15:00</span></div>
+      <div style="display:flex;justify-content:space-between"><span>Søndag</span><span style="color:var(--gray-400)">Stengt</span></div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item active"><div class="nav-icon">⌂</div><div class="nav-label">Hjem</div><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="showScreen('book')"><div class="nav-icon">◷</div><div class="nav-label">Book</div></div>
+      <div class="nav-item"><div class="nav-icon">♡</div><div class="nav-label">Favoritter</div></div>
+      <div class="nav-item"><div class="nav-icon">◉</div><div class="nav-label">Profil</div></div>
+    </div>
+  </div>
+
+  <!-- BOOKING SCREEN -->
+  <div class="screen" id="screen-book">
+    <div class="status-bar">
+      <span>09:41</span><span>◆ Arendal</span>
+    </div>
+    <div class="app-nav" style="background:var(--color-background-primary);">
+      <div style="font-size:16px;font-weight:500;color:var(--color-text-primary);">Book time</div>
+      <div style="font-size:12px;color:var(--amber-400);cursor:pointer;" onclick="showScreen('home')">← Tilbake</div>
+    </div>
+
+    <div class="section" style="padding-bottom:10px;"><div class="section-title">Velg tjeneste</div></div>
+    <div class="service-list" style="padding-bottom:10px;">
+      <div class="service-card selected" onclick="selectService(this)">
+        <div><div class="service-name">Dameklipp</div><div class="service-dur">45 min</div></div>
+        <div style="display:flex;align-items:center"><div class="service-price">fr. 450 kr</div><div class="service-check on" style="margin-left:8px"></div></div>
+      </div>
+      <div class="service-card" onclick="selectService(this)">
+        <div><div class="service-name">Herreklipp</div><div class="service-dur">30 min</div></div>
+        <div style="display:flex;align-items:center"><div class="service-price">fr. 350 kr</div><div class="service-check"></div></div>
+      </div>
+      <div class="service-card" onclick="selectService(this)">
+        <div><div class="service-name">Farging + klipp</div><div class="service-dur">90 min</div></div>
+        <div style="display:flex;align-items:center"><div class="service-price">fr. 800 kr</div><div class="service-check"></div></div>
+      </div>
+    </div>
+
+    <div class="section" style="padding-bottom:10px;"><div class="section-title">Velg frisør</div></div>
+    <div class="emp-row">
+      <div class="emp-card selected" onclick="selectEmp(this)">
+        <div class="emp-avatar" style="background:var(--amber-50);color:var(--amber-600);">LH</div>
+        <div class="emp-name">Lise H.</div><div class="emp-role">Eier</div>
+      </div>
+      <div class="emp-card" onclick="selectEmp(this)">
+        <div class="emp-avatar" style="background:var(--coral-50);color:var(--coral-400);">MK</div>
+        <div class="emp-name">Maria K.</div><div class="emp-role">Frisør</div>
+      </div>
+      <div class="emp-card" onclick="selectEmp(this)">
+        <div class="emp-avatar" style="background:var(--teal-50);color:var(--teal-600);">JE</div>
+        <div class="emp-name">Jonas E.</div><div class="emp-role">Frisør</div>
+      </div>
+      <div class="emp-card" onclick="selectEmp(this)">
+        <div class="emp-avatar" style="background:var(--gray-50);color:var(--gray-600);">AL</div>
+        <div class="emp-name">Anna L.</div><div class="emp-role">Deltid</div>
+      </div>
+    </div>
+
+    <div class="section" style="padding-bottom:10px;"><div class="section-title">Velg dato</div></div>
+    <div class="date-strip">
+      <div class="date-btn"><div class="date-day">Man</div><div class="date-num">28</div></div>
+      <div class="date-btn"><div class="date-day">Tir</div><div class="date-num">29</div></div>
+      <div class="date-btn selected"><div class="date-day">Ons</div><div class="date-num">30</div></div>
+      <div class="date-btn"><div class="date-day">Tor</div><div class="date-num">1</div></div>
+      <div class="date-btn"><div class="date-day">Fre</div><div class="date-num">2</div></div>
+      <div class="date-btn"><div class="date-day">Lør</div><div class="date-num">3</div></div>
+    </div>
+
+    <div class="section" style="padding-bottom:10px;"><div class="section-title">Ledige tider</div></div>
+    <div class="time-grid">
+      <div class="time-slot taken">09:00</div>
+      <div class="time-slot taken">09:30</div>
+      <div class="time-slot" onclick="selectTime(this)">10:00</div>
+      <div class="time-slot selected" onclick="selectTime(this)">10:45</div>
+      <div class="time-slot" onclick="selectTime(this)">11:30</div>
+      <div class="time-slot taken">12:00</div>
+      <div class="time-slot" onclick="selectTime(this)">13:00</div>
+      <div class="time-slot" onclick="selectTime(this)">13:45</div>
+      <div class="time-slot" onclick="selectTime(this)">14:30</div>
+      <div class="time-slot taken">15:00</div>
+      <div class="time-slot" onclick="selectTime(this)">15:45</div>
+      <div class="time-slot" onclick="selectTime(this)">16:30</div>
+    </div>
+
+    <div style="padding: 0 20px 20px;">
+      <button class="btn-primary" style="width:100%;text-align:center;" onclick="showScreen('confirm')">Bekreft bestilling ↗</button>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="showScreen('home')"><div class="nav-icon">⌂</div><div class="nav-label">Hjem</div></div>
+      <div class="nav-item active"><div class="nav-icon">◷</div><div class="nav-label">Book</div><div class="nav-dot"></div></div>
+      <div class="nav-item"><div class="nav-icon">♡</div><div class="nav-label">Favoritter</div></div>
+      <div class="nav-item"><div class="nav-icon">◉</div><div class="nav-label">Profil</div></div>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION SCREEN -->
+  <div class="screen" id="screen-confirm">
+    <div class="status-bar"><span>09:41</span><span>◆ Arendal</span></div>
+    <div style="text-align:center; padding: 28px 20px 16px;">
+      <div class="success-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22"><polyline points="4,11 9,16 18,6" fill="none" stroke="#0F6E56" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="chip">Bestilling bekreftet</div>
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;">Vi gleder oss til å se deg!</div>
+      <div style="font-size:13px;color:var(--gray-400);">Du mottar SMS-påminnelse 24 timer før.</div>
+    </div>
+    <div class="confirm-card">
+      <div class="confirm-row"><span class="confirm-label">Tjeneste</span><span class="confirm-val">Dameklipp</span></div>
+      <div class="confirm-row"><span class="confirm-label">Frisør</span><span class="confirm-val">Lise Haugen</span></div>
+      <div class="confirm-row"><span class="confirm-label">Dato</span><span class="confirm-val">Ons 30. april</span></div>
+      <div class="confirm-row"><span class="confirm-label">Tid</span><span class="confirm-val">10:45</span></div>
+      <div class="confirm-row"><span class="confirm-label">Varighet</span><span class="confirm-val">45 min</span></div>
+    </div>
+    <div class="total-row">
+      <div><div class="total-label">Estimert pris</div><div class="total-price">450 kr</div></div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:var(--gray-400);margin-bottom:4px;">Booking-kode</div>
+        <div style="font-size:14px;font-weight:500;color:var(--amber-800);letter-spacing:2px;">SOL-2847</div>
+      </div>
+    </div>
+    <div style="padding: 0 20px; display:flex; gap:8px;">
+      <button class="btn-ghost" style="flex:1;" onclick="showScreen('home')">← Hjem</button>
+      <button class="btn-primary" style="flex:1;">Legg til kalender</button>
+    </div>
+    <div style="margin: 14px 20px; border-radius:8px; background:var(--amber-50); border: 0.5px solid var(--amber-100); padding: 12px 14px; font-size:12px; color:var(--amber-800); line-height:1.6;">
+      <strong>Avbestilling</strong> — Kanseller senest 24 timer før timen for å unngå gebyr. Ring oss på <span style="color:var(--amber-600);">37 02 11 xx</span>.
+    </div>
+    <div class="bottom-nav" style="margin-top:8px;">
+      <div class="nav-item" onclick="showScreen('home')"><div class="nav-icon">⌂</div><div class="nav-label">Hjem</div></div>
+      <div class="nav-item" onclick="showScreen('book')"><div class="nav-icon">◷</div><div class="nav-label">Book</div></div>
+      <div class="nav-item"><div class="nav-icon">♡</div><div class="nav-label">Favoritter</div></div>
+      <div class="nav-item active"><div class="nav-icon">◉</div><div class="nav-label">Profil</div><div class="nav-dot"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('.page-tab').forEach((t, i) => {
+    const ids = ['home','book','confirm'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+}
+function selectService(el) {
+  document.querySelectorAll('#screen-book .service-card').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('.service-check').classList.remove('on');
+  });
+  el.classList.add('selected');
+  el.querySelector('.service-check').classList.add('on');
+}
+function selectEmp(el) {
+  document.querySelectorAll('.emp-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectTime(el) {
+  if(el.classList.contains('taken')) return;
+  document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>

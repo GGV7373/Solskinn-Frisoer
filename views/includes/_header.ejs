@@ -10,7 +10,7 @@
         <a href="/aapningstider" class="<%= activeNav === 'aapningstider' ? 'active' : '' %>">Åpningstider</a>
         <a href="/booking" class="btn btn-primary site-nav-cta">Book time</a>
       </nav>
-      <button class="nav-hamburger" aria-label="Meny" aria-expanded="false" id="hamburger-btn">
+      <button class="nav-hamburger" aria-label="Meny" aria-controls="mobile-menu" aria-expanded="false" id="hamburger-btn">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="3" y1="6"  x2="19" y2="6"/>
           <line x1="3" y1="11" x2="19" y2="11"/>
@@ -30,8 +30,28 @@
 <script>
   const btn = document.getElementById('hamburger-btn');
   const menu = document.getElementById('mobile-menu');
+
+  function closeMenu() {
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
   btn.addEventListener('click', () => {
     const open = menu.classList.toggle('open');
-    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeMenu();
+  });
+
+  document.addEventListener('click', event => {
+    if (!menu.classList.contains('open')) return;
+    if (menu.contains(event.target) || btn.contains(event.target)) return;
+    closeMenu();
   });
 </script>

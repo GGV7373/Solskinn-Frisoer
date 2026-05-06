@@ -102,6 +102,21 @@
 }
 .mobile-menu-cta:hover { background: var(--gold-500) !important; }
 
+a:focus-visible,
+button:focus-visible,
+.nav-hamburger:focus-visible,
+.site-nav a:focus-visible,
+.mobile-menu a:focus-visible,
+.service-card:focus-visible,
+.emp-card:focus-visible,
+.date-btn:focus-visible,
+.time-slot:focus-visible,
+.btn:focus-visible,
+.nav-back:focus-visible {
+  outline: 3px solid rgba(184,134,11,.35);
+  outline-offset: 3px;
+}
+
 @media (max-width: 640px) {
   .site-nav { display: none; }
   .nav-hamburger { display: block; }

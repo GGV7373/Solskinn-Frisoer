@@ -6,6 +6,7 @@ Solskinn Frisør er et bestillings- og administrasjonssystem for en frisørsalon
 
 - [Oversikt](#oversikt)
 - [Funksjoner](#funksjoner)
+- [UI/UX og designvalg](#uiux-og-designvalg)
 - [Teknisk stack](#teknisk-stack)
 - [Prosjektstruktur](#prosjektstruktur)
 - [Forutsetninger](#forutsetninger)
@@ -47,6 +48,12 @@ Dette prosjektet støtter blant annet:
 - Oppretting, redigering og deaktivering av tjenester.
 - Vedlikehold av ukentlig arbeidsplan per ansatt.
 
+## UI/UX og designvalg
+
+Prosjektet har en egen UI/UX-dokumentasjon i `docs/ux-ui.md` som beskriver mal, designvalg, bookingflyt, responsiv tilpasning og enkle tilgjengelighetstiltak.
+
+I tillegg ligger det mockup-filer i rotmappen som viser tidlig planlegging av grensesnitt og navigasjon.
+
 ## Teknisk stack
 
 - Runtime: Node.js 20
@@ -65,6 +72,7 @@ De viktigste mappene og filene:
 - `controllers/`: applikasjonslogikk for visninger, booking og administrasjon.
 - `views/`: EJS-maler for kunde- og adminflater.
 - `public/`: statiske filer som CSS og bilder.
+- `docs/ux-ui.md`: dokumentasjon av UI/UX, designvalg og brukerflyt.
 - `db/schema.sql`: databaseskjema.
 - `db/seed.sql`: eksempeldata som legges inn ved oppstart.
 - `docker-compose.yml`: lokal utviklingsstack med app og PostgreSQL.
