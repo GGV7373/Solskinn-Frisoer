@@ -73,11 +73,16 @@
             <% } %>
           </td>
           <td>
+            <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
             <% if (b.status !== 'cancelled') { %>
             <form method="POST" action="/admin/bestillinger/<%= b.id %>/avlys" onsubmit="return confirm('Avlyse bestilling <%= b.booking_code %>?')">
               <button class="admin-btn admin-btn--danger admin-btn--sm" type="submit">Avlys</button>
             </form>
             <% } %>
+            <form method="POST" action="/admin/bestillinger/<%= b.id %>/slett" onsubmit="return confirm('Slett bestilling <%= b.booking_code %> permanent? Dette kan ikke angres.')">
+              <button class="admin-btn admin-btn--ghost admin-btn--sm" type="submit" style="color:#b91c1c;border-color:#b91c1c;">Slett</button>
+            </form>
+            </div>
           </td>
         </tr>
         <% }) %>

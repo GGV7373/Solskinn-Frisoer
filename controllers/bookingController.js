@@ -1,5 +1,16 @@
 const { pool } = require('../db');
 const { buildDaysLabel } = require('./homeController');
+const crypto = require('crypto');
+
+const BOOKING_SECRET = process.env.BOOKING_SECRET || process.env.SESSION_SECRET || 'fallback-change-me';
+
+function signCode(code) {
+  return crypto.createHmac('sha256', BOOKING_SECRET).update(code).digest('hex').slice(0, 16);
+}
+
+function verifyCode(code, sig) {
+  return sig === signCode(code);
+}
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -288,11 +299,13 @@ exports.postStep4 = async (req, res) => {
   try {
     await client.query('BEGIN');
 
-    // Re-check availability inside transaction
+    // Re-check availability inside transaction (overlap, not just exact start_time)
     const conflict = await client.query(
       `SELECT id FROM bookings
-       WHERE worker_id = $1 AND booking_date = $2 AND start_time = $3 AND status != 'cancelled'`,
-      [b.workerId, b.date, b.time]
+       WHERE worker_id = $1 AND booking_date = $2
+         AND start_time < $4 AND end_time > $3
+         AND status != 'cancelled'`,
+      [b.workerId, b.date, b.time, b.endTime]
     );
     if (conflict.rows.length) {
       await client.query('ROLLBACK');
@@ -316,7 +329,7 @@ exports.postStep4 = async (req, res) => {
 
     await client.query('COMMIT');
     delete req.session.booking;
-    res.redirect(`/booking/confirmation/${code}`);
+    res.redirect(`/booking/confirmation/${code}?v=${signCode(code)}`);
   } catch (err) {
     await client.query('ROLLBACK');
     throw err;
@@ -328,6 +341,13 @@ exports.postStep4 = async (req, res) => {
 // ─── confirmation ─────────────────────────────────────────────────────────────
 
 exports.getConfirmation = async (req, res) => {
+  const code = req.params.code;
+  const sig  = req.query.v;
+
+  if (!sig || !verifyCode(code, sig)) {
+    return res.status(403).render('error', { code: 403, message: 'Ugyldig bekreftelseslenke' });
+  }
+
   const row = await pool.query(
     `SELECT b.*, w.name AS worker_name, s.name AS service_name,
             s.duration_minutes, s.price

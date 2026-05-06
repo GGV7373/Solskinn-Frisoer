@@ -11,6 +11,7 @@ router.get('/logout',        ctrl.logout);
 router.get('/dashboard',     auth, ctrl.getDashboard);
 router.get('/bestillinger',  auth, ctrl.getBestillinger);
 router.post('/bestillinger/:id/avlys', auth, ctrl.cancelBooking);
+router.post('/bestillinger/:id/slett', auth, ctrl.deleteBooking);
 router.get('/arbeidsplan',   auth, ctrl.getArbeidsplan);
 router.post('/arbeidsplan/:workerId', auth, ctrl.postArbeidsplan);
 

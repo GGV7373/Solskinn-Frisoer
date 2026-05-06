@@ -133,6 +133,14 @@ exports.cancelBooking = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.deleteBooking = async (req, res, next) => {
+  try {
+    await pool.query('DELETE FROM bookings WHERE id = $1', [req.params.id]);
+    const ref = req.get('Referer') || '/admin/bestillinger';
+    res.redirect(ref);
+  } catch (err) { next(err); }
+};
+
 // ── Arbeidsplan ───────────────────────────────────────────────────────────────
 
 exports.getArbeidsplan = async (req, res, next) => {
