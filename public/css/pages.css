@@ -352,6 +352,47 @@
 .contact-link  { color: var(--gold-500); transition: color .15s; }
 .contact-link:hover { color: var(--gold-600); }
 
+/* ── How-to Steps ── */
+.how-to-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  counter-reset: step;
+}
+.how-to-step {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .75rem;
+  background: var(--sand-50);
+  border: 1px solid var(--sand-200);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  transition: box-shadow .2s, transform .2s;
+}
+.how-to-step:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.how-to-num {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--gold-400);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.how-to-title { font-size: 1rem; font-weight: 700; color: var(--sand-900); }
+.how-to-desc  { font-size: .875rem; color: var(--sand-500); line-height: 1.65; }
+@media (max-width: 900px) {
+  .how-to-steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .how-to-steps { grid-template-columns: 1fr; }
+}
+
 /* ── CTA Band ── */
 .cta-band {
   background: var(--gold-400);

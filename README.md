@@ -4,6 +4,7 @@ Solskinn Frisør er et bestillings- og administrasjonssystem for en frisørsalon
 
 ## Innholdsfortegnelse
 
+- [Arkitekturdiagram](#arkitekturdiagram)
 - [Oversikt](#oversikt)
 - [Funksjoner](#funksjoner)
 - [UI/UX og designvalg](#uiux-og-designvalg)
@@ -22,6 +23,25 @@ Solskinn Frisør er et bestillings- og administrasjonssystem for en frisørsalon
 - [Feilsøking](#feilsoking)
 - [Produksjon](#produksjon)
 - [Sikkerhetsliste](#sikkerhetsliste)
+- [Brukerstøtte](#brukerstotte)
+
+## Arkitekturdiagram
+
+```
+Kunde (nettleser)
+       │
+       │  HTTP/HTTPS
+       ▼
+Railway (Node.js / Express)
+  ├── Offentlig nettside og bookingflyt
+  └── Admin-panel (/admin)
+       │
+       │  SQL (pg)
+       ▼
+   PostgreSQL
+```
+
+Alle forespørsler fra nettleseren treffer Express-serveren på Railway. Serveren håndterer både den offentlige kundedelen og det passordbeskyttede adminpanelet, og kommuniserer med PostgreSQL for all datalagring.
 
 ## Oversikt
 
@@ -363,3 +383,48 @@ cat sikkerhetskopi.sql | docker compose exec -T db psql -U solskinn -d solskinn
 ```bash
 docker compose exec db psql -U solskinn -d solskinn
 ```
+
+## Brukerstotte
+
+### Slik booker en kunde time
+
+1. Gå til forsiden og klikk **Book time**.
+2. **Velg tjeneste** – velg ønsket behandling fra listen og klikk *Neste*.
+3. **Velg frisør** – velg hvem du vil ha time hos og klikk *Neste*.
+4. **Velg dato og tid** – kalenderen viser kun dager der valgt frisør jobber. Velg en dato, deretter et ledig tidspunkt, og klikk *Neste*.
+5. **Fyll inn kontaktinfo** – skriv inn navn, telefonnummer og eventuelt e-post. Klikk *Bekreft bestilling*.
+6. Du får en bekreftelsesside med en bookingkode på formatet `SOL-XXXX`. Ta vare på koden.
+
+Booking er ikke mulig for tidspunkt som er svært nære i tid, eller for dager der frisøren ikke har arbeidsplan.
+
+### Slik logger en ansatt inn på admin
+
+1. Gå til `/admin/login`.
+2. Skriv inn adminpassordet og klikk **Logg inn**.
+3. Du sendes videre til dashboardet som viser nøkkeltall og kommende timer.
+4. Bruk toppmenyen til å navigere mellom bestillinger, arbeidsplan, ansatte og tjenester.
+
+Passordet styres av miljøvariabelen `ADMIN_PASSWORD`. Se [Miljøvariabler](#miljovariabler).
+
+### Slik legger man til eller deaktiverer en tjeneste
+
+**Legge til ny tjeneste:**
+
+1. Logg inn på admin og gå til **Tjenester** i menyen.
+2. Fyll inn navn, varighet (minutter) og pris i skjemaet øverst på siden.
+3. Klikk **Legg til tjeneste** – tjenesten er nå synlig i bookingflyten.
+
+**Deaktivere en tjeneste:**
+
+1. Finn tjenesten i listen og klikk **Deaktiver**.
+2. Tjenesten fjernes fra bookingflyten, men slettes ikke fra databasen slik at historiske bestillinger bevares.
+3. Klikk **Aktiver** for å gjøre den synlig igjen.
+
+### Slik leser man av bestillingsoversikten
+
+1. Logg inn på admin og gå til **Bestillinger** i menyen.
+2. Bruk filtrene øverst for å snevre inn på dato, ansatt eller status.
+3. Hver rad viser: bookingkode, kundenavn, tjeneste, frisør, dato og tidspunkt.
+4. Klikk **Avlys** for å kansellere en bestilling. Systemet sender ikke automatisk varsel til kunden.
+
+Dashboardet (`/admin/dashboard`) gir en rask oversikt over dagens, ukens og totalt antall bestillinger samt kommende timer.
