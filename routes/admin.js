@@ -19,10 +19,12 @@ router.get('/ansatte',            auth, ctrl.getAnsatte);
 router.post('/ansatte',           auth, ctrl.postAnsatt);
 router.post('/ansatte/:id',       auth, ctrl.postEditAnsatt);
 router.post('/ansatte/:id/slett', auth, ctrl.deleteAnsatt);
+router.post('/ansatte/:id/slett-permanent', auth, ctrl.permanentDeleteAnsatt);
 
 router.get('/tjenester',             auth, ctrl.getTjenester);
 router.post('/tjenester',            auth, ctrl.postTjeneste);
 router.post('/tjenester/:id',        auth, ctrl.postEditTjeneste);
 router.post('/tjenester/:id/slett',  auth, ctrl.deleteTjeneste);
+router.post('/tjenester/:id/slett-permanent', auth, ctrl.permanentDeleteTjeneste);
 
 module.exports = router;

@@ -244,6 +244,15 @@ exports.deleteAnsatt = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.permanentDeleteAnsatt = async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await pool.query('UPDATE bookings SET worker_id = NULL WHERE worker_id = $1', [id]);
+    await pool.query('DELETE FROM workers WHERE id = $1', [id]);
+    res.redirect('/admin/ansatte');
+  } catch (err) { next(err); }
+};
+
 // ── Tjenester ─────────────────────────────────────────────────────────────────
 
 exports.getTjenester = async (req, res, next) => {
@@ -284,6 +293,15 @@ exports.deleteTjeneste = async (req, res, next) => {
   const id = parseInt(req.params.id, 10);
   try {
     await pool.query('UPDATE services SET is_active = FALSE WHERE id = $1', [id]);
+    res.redirect('/admin/tjenester');
+  } catch (err) { next(err); }
+};
+
+exports.permanentDeleteTjeneste = async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await pool.query('UPDATE bookings SET service_id = NULL WHERE service_id = $1', [id]);
+    await pool.query('DELETE FROM services WHERE id = $1', [id]);
     res.redirect('/admin/tjenester');
   } catch (err) { next(err); }
 };

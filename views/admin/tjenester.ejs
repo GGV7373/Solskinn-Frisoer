@@ -80,6 +80,10 @@
             <form method="POST" action="/admin/tjenester/<%= s.id %>/slett" style="display:inline" onsubmit="return confirm('Deaktiver tjenesten <%= s.name %>?')">
               <button class="admin-btn admin-btn--danger admin-btn--sm" type="submit">Deaktiver</button>
             </form>
+            <% } else { %>
+            <form method="POST" action="/admin/tjenester/<%= s.id %>/slett-permanent" style="display:inline" onsubmit="return confirm('Slett <%= s.name %> permanent? Dette kan ikke angres.')">
+              <button class="admin-btn admin-btn--danger admin-btn--sm" type="submit">Slett permanent</button>
+            </form>
             <% } %>
           </td>
         </tr>
