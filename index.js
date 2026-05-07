@@ -12,8 +12,11 @@ const PgSession = connectPgSimple(session);
 async function initDb() {
   const schema = fs.readFileSync(path.join(__dirname, 'db', 'schema.sql'), 'utf8');
   await pool.query(schema);
-  const seed = fs.readFileSync(path.join(__dirname, 'db', 'seed.sql'), 'utf8');
-  await pool.query(seed);
+  const { rows } = await pool.query('SELECT COUNT(*) FROM workers');
+  if (parseInt(rows[0].count, 10) === 0) {
+    const seed = fs.readFileSync(path.join(__dirname, 'db', 'seed.sql'), 'utf8');
+    await pool.query(seed);
+  }
 }
 
 app.set('view engine', 'ejs');
